@@ -32,5 +32,4 @@ app.use(methodOverride(function(req, res){
 }));
 
 app.use(routes);
-app.listen(3000);
-console.log("Express is listening on localhost:3000")
+app.listen(process.env.PORT || 3000);
