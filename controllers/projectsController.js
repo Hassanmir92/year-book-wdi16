@@ -1,4 +1,5 @@
 var Project = require("../models/project");
+var User    = require("../models/user");
 
 function projectsIndex(req, res){
   Project.find({}, function(err, projects) {
@@ -10,12 +11,15 @@ function projectsIndex(req, res){
 
 function projectsCreate(req, res){
   var project = new Project(req.body.project);
-
-  project.save(function(err, project) {
-    if (err) return res.status(500).send(err);
-
+  project.save(function(err){
+    if (err) return res.status(500).send({message:err});
+    var id = req.body.project.user;
+    User.findOne({ _id: id }, function(err, user){
+       user.projects.push(project);
+       user.save();
+    });
     res.status(201).send(project)
-  })
+  });
 }
 
 function projectsShow(req, res){
